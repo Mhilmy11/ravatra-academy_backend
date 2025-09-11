@@ -75,7 +75,7 @@ try {
 
     $curl = curl_init();
     curl_setopt_array($curl, [
-        // CURLOPT_URL => "https://api.fonnte.com/send",
+        CURLOPT_URL => "https://api.fonnte.com/send",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
         CURLOPT_POSTFIELDS => [
