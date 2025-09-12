@@ -66,7 +66,7 @@ curl_setopt_array($curl, [
         'message' => $message
     ],
     CURLOPT_HTTPHEADER => [
-        // "Authorization: ZG7VuhnuQ8RLjWtiCGae"
+        "Authorization: ZG7VuhnuQ8RLjWtiCGae"
     ],
 ]);
 $response = curl_exec($curl);
