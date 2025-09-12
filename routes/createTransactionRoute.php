@@ -83,7 +83,7 @@ try {
             'message' => $message
         ],
         CURLOPT_HTTPHEADER => [
-            // "Authorization: ZG7VuhnuQ8RLjWtiCGae"
+            "Authorization: ZG7VuhnuQ8RLjWtiCGae"
         ],
     ]);
     $waResponse = curl_exec($curl);
