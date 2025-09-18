@@ -58,7 +58,7 @@ try {
     ]);
 
     // SEND TO ADMIN
-    $adminPhone = "6282298605562";
+    $adminPhone = "6282298605562, 6285894446021";
     $approveLink = "http://ravatraacademy-dev.netlify.app/admin-approval/$id/$userId";
 
     $message = "🆕 Order Baru Masuk\n\n" .
