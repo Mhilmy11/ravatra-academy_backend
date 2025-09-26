@@ -1,38 +1,28 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+require_once(__DIR__ . '/../config/db.php');
 
-header("Content-Type: text/plain");
-
-// Pastikan path sesuai
-require_once __DIR__ . "/../config/db.php";
-
-$email = isset($_GET['email']) ? $_GET['email'] : null;
-$password = isset($_GET['password']) ? $_GET['password'] : null;
+$email = $_GET['email'] ?? '';
+$password = $_GET['password'] ?? '';
 
 if (!$email || !$password) {
-    die("❌ Gunakan format: test_login.php?email=EMAIL&password=PASSWORD");
+    die("Email dan password harus diisi di query string");
 }
 
-try {
-    $query = "SELECT * FROM users WHERE email = :email LIMIT 1";
-    $stmt = $db->prepare($query);
-    $stmt->bindParam(":email", $email);
-    $stmt->execute();
+// Query cek user
+$query = "SELECT * FROM users WHERE email = :email LIMIT 1";
+$stmt = $pdo->prepare($query);   // ✅ pakai $pdo
+$stmt->bindParam(":email", $email);
+$stmt->execute();
 
-    if ($stmt->rowCount() === 0) {
-        die("❌ Email tidak ditemukan di database");
-    }
+if ($stmt->rowCount() === 0) {
+    die("Email tidak ditemukan");
+}
 
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    echo "Hash dari DB: " . $user['password'] . "\n";
-
-    if (password_verify($password, $user['password'])) {
-        echo "✅ Password cocok!";
-    } else {
-        echo "❌ Password salah!";
-    }
-} catch (Exception $e) {
-    echo "🔥 Error: " . $e->getMessage();
+// Verifikasi password
+if (password_verify($password, $user['password'])) {
+    echo "✅ Password cocok!";
+} else {
+    echo "❌ Password salah!";
 }
