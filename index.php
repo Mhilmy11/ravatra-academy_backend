@@ -12,6 +12,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 $route = $_GET['route'] ?? null;
 
 switch ($route) {
+
+    case 'login':
+        require_once("routes/login.php");
+        break;
+
+    case 'dashboard':
+        require_once("routes/dashboard.php");
+        break;
+
     case 'products':
         require_once("routes/productsRoute.php");
         break;
