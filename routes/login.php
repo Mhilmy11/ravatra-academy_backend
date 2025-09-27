@@ -27,7 +27,6 @@ $email = trim($data->email);
 $password = trim($data->password);
 
 try {
-    // ✅ Query cek user by email
     $query = "SELECT * FROM users WHERE email = :email LIMIT 1";
     $stmt = $pdo->prepare($query);
     $stmt->bindParam(":email", $email);
@@ -41,14 +40,12 @@ try {
 
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // ✅ Verifikasi password
     if (!password_verify($password, $user['password'])) {
         http_response_code(401);
         echo json_encode(["message" => "Email atau password salah"]);
         exit;
     }
 
-    // ✅ Pastikan hanya admin
     if ($user['role'] !== 'admin') {
         http_response_code(403);
         echo json_encode(["message" => "Login hanya untuk admin"]);
@@ -58,7 +55,7 @@ try {
     // ✅ Buat JWT token
     $payload = [
         "iat" => time(),
-        "exp" => time() + (60 * 60), // 1 jam
+        "exp" => time() + (60 * 60),
         "data" => [
             "id" => $user['id'],
             "email" => $user['email'],
@@ -69,7 +66,6 @@ try {
 
     $jwt = JWT::encode($payload, $secret_key, 'HS256');
 
-    // ✅ Response sukses
     http_response_code(200);
     echo json_encode([
         "success" => true,

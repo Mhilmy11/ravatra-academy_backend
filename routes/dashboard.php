@@ -8,14 +8,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-require_once(__DIR__ . '/../config/db.php');     // koneksi pakai $pdo
-require_once(__DIR__ . '/../config/config.php'); // secret_key
+require_once(__DIR__ . '/../config/db.php');
+require_once(__DIR__ . '/../config/config.php');
 require_once(__DIR__ . '/../vendor/autoload.php');
 
 use \Firebase\JWT\JWT;
 use \Firebase\JWT\Key;
 
-// Ambil token dari header Authorization
 $headers = getallheaders();
 $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? null;
 
@@ -28,17 +27,14 @@ if (!$authHeader || !preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
 $jwt = $matches[1];
 
 try {
-    // Decode token
     $decoded = JWT::decode($jwt, new Key($secret_key, 'HS256'));
 
-    // Cek role admin
     if ($decoded->data->role !== 'admin') {
         http_response_code(403);
         echo json_encode(["success" => false, "message" => "Akses ditolak, hanya admin yang bisa masuk"]);
         exit;
     }
 
-    // Contoh query ke DB (jumlah user)
     $stmt = $pdo->query("SELECT COUNT(*) as total_users FROM users");
     $totalUsers = $stmt->fetch(PDO::FETCH_ASSOC);
 

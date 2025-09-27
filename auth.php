@@ -9,7 +9,6 @@ require_once(__DIR__ . '/../vendor/autoload.php');
 use \Firebase\JWT\JWT;
 use \Firebase\JWT\Key;
 
-// ✅ Ambil Authorization Header
 $headers = apache_request_headers();
 $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
 
@@ -19,7 +18,6 @@ if (!$authHeader) {
     exit;
 }
 
-// ✅ Format token: "Bearer <token>"
 list($type, $token) = explode(" ", $authHeader, 2);
 
 if (strcasecmp($type, "Bearer") != 0 || empty($token)) {
@@ -29,18 +27,15 @@ if (strcasecmp($type, "Bearer") != 0 || empty($token)) {
 }
 
 try {
-    // ✅ Decode JWT
     $decoded = JWT::decode($token, new Key($secret_key, 'HS256'));
     $userData = (array) $decoded->data;
 
-    // ✅ Pastikan role admin
     if ($userData['role'] !== 'admin') {
         http_response_code(403);
         echo json_encode(["success" => false, "message" => "Akses ditolak, hanya untuk admin"]);
         exit;
     }
 
-    // ✅ Simpan data user agar bisa dipakai di file lain
     $authUser = $userData;
 
 } catch (Exception $e) {
