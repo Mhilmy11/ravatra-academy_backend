@@ -15,8 +15,8 @@ try {
             t.product_id,
             p.product_name,
             p.product_type,
-            p.price,
-            t.amount,
+            p.product_price,
+            t.product_price,
             t.status,
             t.created_date,
             t.expired_at
