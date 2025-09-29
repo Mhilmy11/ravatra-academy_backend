@@ -18,12 +18,12 @@ try {
             p.product_price,
             t.product_price,
             t.status,
-            t.created_date,
+            t.create_date,
             t.expired_at
         FROM transactions t
         LEFT JOIN users u ON t.user_id = u.id
         LEFT JOIN products p ON t.product_id = p.id
-        ORDER BY t.created_date DESC
+        ORDER BY t.create_date DESC
     ");
     $stmt->execute();
     $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
