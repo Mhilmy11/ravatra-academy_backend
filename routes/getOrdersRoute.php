@@ -4,6 +4,7 @@ header("Content-Type: application/json");
 require_once(__DIR__ . '/../config/db.php');
 
 try {
+    // Ambil semua transaksi (orders)
     $stmt = $pdo->prepare("
         SELECT 
             t.id,
@@ -15,7 +16,6 @@ try {
             t.product_id,
             p.product_name,
             p.product_type,
-            p.product_price,
             t.product_price,
             t.status,
             t.create_date,
@@ -28,11 +28,22 @@ try {
     $stmt->execute();
     $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    $stmtUsers = $pdo->prepare("SELECT id, first_name, last_name, email, phone FROM users");
+    $stmtUsers->execute();
+    $users = $stmtUsers->fetchAll(PDO::FETCH_ASSOC);
+
+    $stmtProducts = $pdo->prepare("SELECT id, product_name, product_type, product_price, pendaftar FROM products");
+    $stmtProducts->execute();
+    $products = $stmtProducts->fetchAll(PDO::FETCH_ASSOC);
+
     echo json_encode([
         "success" => true,
-        "orders" => $orders
+        "orders" => $orders,
+        "users" => $users,
+        "products" => $products
     ]);
 } catch (Exception $e) {
+    http_response_code(500);
     echo json_encode([
         "success" => false,
         "message" => $e->getMessage()
