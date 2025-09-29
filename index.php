@@ -11,54 +11,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 $route = $_GET['route'] ?? null;
 
-switch ($route) {
+if (!$route) {
+    echo json_encode(["success" => false, "message" => "Route tidak ditemukan"]);
+    exit;
+}
 
-    case 'login':
-        require_once("routes/login.php");
-        break;
+$routes = [
+    "login" => "routes/login.php",
+    "dashboard" => "routes/dashboard.php",
+    "products" => "routes/productsRoute.php",
+    "register" => "routes/registerRoute.php",
+    "getOrders" => "routes/getOrdersRoute.php",
+    "getTransaction" => "routes/getTransactionRoute.php",
+    "transaction" => "routes/transactionRoute.php",
+    "createTransaction" => "routes/createTransactionRoute.php",
+    "approvalPayment" => "routes/approvalPaymentRoute.php",
+    "rejectPayment" => "routes/rejectPaymentRoute.php",
+    "xenditPayment" => "routes/xenditPaymentRoute.php"
+];
 
-    case 'dashboard':
-        require_once("routes/dashboard.php");
-        break;
-
-    case 'products':
-        require_once("routes/productsRoute.php");
-        break;
-
-    case 'register':
-        require_once("routes/registerRoute.php");
-        break;
-
-    case 'getTransaction':
-        require_once(__DIR__ . "/routes/getTransactionRoute.php");
-        break;
-
-    case 'transaction':
-        require_once("/routes/transactionRoute.php");
-        break;
-
-    case 'createTransaction':
-        require_once("routes/createTransactionRoute.php");
-        break;
-
-    case 'approvalPayment':
-        require_once(__DIR__ . "/routes/approvalPaymentRoute.php");
-        break;
-
-    case 'rejectPayment':
-        require_once("routes/rejectPaymentRoute.php");
-        break;
-
-    case 'xenditPayment':
-        require_once("routes/xenditPaymentRoute.php");
-        break;
-
-
-    default:
-        http_response_code(404);
-        echo json_encode([
-            "success" => false,
-            "message" => "Route tidak ditemukan"
-        ]);
-        break;
+if (array_key_exists($route, $routes)) {
+    require_once __DIR__ . "/" . $routes[$route];
+} else {
+    echo json_encode(["success" => false, "message" => "Route tidak valid"]);
+    exit;
 }
