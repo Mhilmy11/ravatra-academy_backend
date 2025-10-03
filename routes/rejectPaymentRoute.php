@@ -12,7 +12,6 @@ if (!$id || !$userId) {
     exit;
 }
 
-// Ambil transaksi
 $stmt = $pdo->prepare("SELECT * FROM transactions WHERE id=? AND user_id=?");
 $stmt->execute([$id, $userId]);
 $transaction = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -26,16 +25,13 @@ if ($transaction['status'] !== 'PENDING') {
     exit;
 }
 
-// Update status jadi REJECTED
 $stmt = $pdo->prepare("UPDATE transactions SET status='REJECTED', update_date=NOW() WHERE id=?");
 $stmt->execute([$id]);
 
-// Ambil user
 $stmt = $pdo->prepare("SELECT * FROM users WHERE id=?");
 $stmt->execute([$transaction['user_id']]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Kirim notifikasi ke user
 $message = "⚠️ Pembayaran Anda ditolak.\n" .
     "Transaksi ID: $id\n" .
     "Produk: {$transaction['product_name']}\n" .
@@ -51,7 +47,7 @@ curl_setopt_array($curl, [
         'message' => $message
     ],
     CURLOPT_HTTPHEADER => [
-        "Authorization: ZG7VuhnuQ8RLjWtiCGae"
+        "Authorization: iFg4w1pnYnZF9hWFTJ6v"
     ],
 ]);
 $response = curl_exec($curl);

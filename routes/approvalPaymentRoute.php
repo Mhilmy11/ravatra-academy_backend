@@ -3,7 +3,6 @@ header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
 require_once(__DIR__ . '/../config/db.php');
 
-// Ambil input dari frontend (JSON body)
 $input = json_decode(file_get_contents("php://input"), true);
 $id = $input['id'] ?? null;
 $userId = $input['user_id'] ?? null;
@@ -13,7 +12,6 @@ if (!$id || !$userId) {
     exit;
 }
 
-// Ambil transaksi
 $stmt = $pdo->prepare("SELECT * FROM transactions WHERE id=? AND user_id=?");
 $stmt->execute([$id, $userId]);
 $transaction = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -27,15 +25,12 @@ if ($transaction['status'] !== 'PENDING') {
     exit;
 }
 
-// Update status jadi PAID
 $stmt = $pdo->prepare("UPDATE transactions SET status='PAID', update_date=NOW() WHERE id=?");
 $stmt->execute([$id]);
 
-// Update jumlah pendaftar produk
 $stmt = $pdo->prepare("UPDATE products SET pendaftar = pendaftar + 1 WHERE id=?");
 $stmt->execute([$transaction['product_id']]);
 
-// Ambil user & produk
 $stmt = $pdo->prepare("SELECT * FROM users WHERE id=?");
 $stmt->execute([$transaction['user_id']]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -45,7 +40,6 @@ $stmt = $pdo->prepare("SELECT * FROM products WHERE id=?");
 $stmt->execute([$transaction['product_id']]);
 $product = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Kirim package link ke user
 $packageLink = $product['package_link'] ?? "Link belum tersedia";
 $message = "🎉 Yeay Pembayaran anda Berhasil!\n" .
     "Dengan detail berikut:\n" .
@@ -66,7 +60,7 @@ curl_setopt_array($curl, [
         'message' => $message
     ],
     CURLOPT_HTTPHEADER => [
-        "Authorization: ZG7VuhnuQ8RLjWtiCGae"
+        "Authorization: iFg4w1pnYnZF9hWFTJ6v"
     ],
 ]);
 $response = curl_exec($curl);

@@ -3,7 +3,6 @@ header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
 require_once(__DIR__ . '/../config/db.php');
 
-// GET INPUT FROM UI
 $input = json_decode(file_get_contents("php://input"), true);
 $userId = $input['user_id'] ?? null;
 $productId = $input['product_id'] ?? null;
@@ -14,7 +13,6 @@ if (!$userId || !$productId) {
 }
 
 try {
-    // GET DATA PRODUCT
     $stmt = $pdo->prepare("SELECT * FROM products WHERE id=?");
     $stmt->execute([$productId]);
     $product = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -24,7 +22,6 @@ try {
         exit;
     }
 
-    // GET USER DATA
     $stmt = $pdo->prepare("SELECT * FROM users WHERE id=?");
     $stmt->execute([$userId]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -57,9 +54,8 @@ try {
         $expiredAt
     ]);
 
-    // SEND TO ADMIN
-    $adminPhone = "6282298605562, 6285894446021";
-    $approveLink = "http://ravatraacademy-dev.netlify.app/admin-approval/$id/$userId";
+    $adminPhone = "6281214277869, 6282298605562, 6285894446021";
+    $approveLink = "https://ravatraacademy.id/dashboard";
 
     $message = "🆕 Order Baru Masuk\n\n" .
         "ORDER_ID: $id\n" .
@@ -83,7 +79,7 @@ try {
             'message' => $message
         ],
         CURLOPT_HTTPHEADER => [
-            "Authorization: ZG7VuhnuQ8RLjWtiCGae"
+            "Authorization: iFg4w1pnYnZF9hWFTJ6v"
         ],
     ]);
     $waResponse = curl_exec($curl);
@@ -94,7 +90,6 @@ try {
     }
     curl_close($curl);
 
-    // SUCCES RESPONSE TO FRONTEND
     echo json_encode([
         "success" => true,
         "message" => "Transaksi berhasil dibuat",

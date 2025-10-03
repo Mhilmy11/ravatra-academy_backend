@@ -4,7 +4,6 @@ header("Content-Type: application/json");
 require_once(__DIR__ . '/../config/db.php');
 
 try {
-    // Ambil semua transaksi (orders)
     $stmt = $pdo->prepare("
         SELECT 
             t.id,
